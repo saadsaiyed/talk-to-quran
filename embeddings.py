@@ -12,17 +12,19 @@ EMBEDDING_MODEL = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 def create_embeddings(all_verses, chapter_number):
 
     print(all_verses)
+    print("Starting - Initializing Vector DB")
+    vector_store = Chroma(collection_name='quran-docs', embedding_function=EMBEDDING_MODEL, persist_directory="./docs")
+    print("Finished - Initializing Vector DB")
 
     temp = []
     for i, verse in enumerate(all_verses):
+        print(i)
         temp.append(verse["translation"])
-        if i + 1 % 3 == 0:            
-            print("Starting - Initializing Vector DB")
-            vector_store = Chroma(collection_name='quran-docs', embedding_function=EMBEDDING_MODEL, persist_directory="./docs")
-            print("Finished - Initializing Vector DB")
-
+        if (i + 1) % 3 == 0:            
+            print(verse["verse_key"])
             print("Starting - Storing to Vector DB")
-            vector_store.add_texts(texts=temp, metadatas=[verse["verse_key"]])
+            vector_store.add_texts(texts=temp, metadatas=[verse])
+            print("Ended - Storing to Vector DB")
 
         
     return True
