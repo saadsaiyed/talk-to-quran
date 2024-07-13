@@ -9,4 +9,4 @@ app.secret_key = os.environ["FLASK_APP_SECRET"]
 app.config['DEBUG'] = os.environ.get("FLASK_DEBUG")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.getenv("PORT", 8080)))
+    app.run(host='0.0.0.0', port=int(os.getenv("PORT", 8000)))
