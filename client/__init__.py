@@ -1,10 +1,11 @@
 from flask_cors import CORS
 import json, os, logging, re, shutil
-from flask import Flask, Blueprint, render_template, request, abort, session, jsonify, redirect
+from flask import Flask, Blueprint, render_template, request, abort, session, jsonify, redirect, url_for
 from functools import wraps
 from datetime import datetime, timezone
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
+from werkzeug.security import generate_password_hash, check_password_hash
 
 EMBEDDING_MODEL = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 # import embeddings
@@ -24,10 +25,11 @@ def create_app():
 
             vector_store = Chroma(collection_name="quran-docs", persist_directory="./docs", embedding_function=EMBEDDING_MODEL)
 
-            results = vector_store.similarity_search(query=question, k=1)
+            results = vector_store.similarity_search(query=question, k=3)
             context_data = ""
             for result in results:
-                context_data += f'"{result.page_content}"' + '\n\n'
+                content = result.page_content.replace("\n", "<br/>")
+                context_data += f'{content}' + '<br/>'
 
             logging.debug(f"context_data: {context_data}")
 
