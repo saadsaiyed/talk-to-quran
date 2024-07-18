@@ -72,7 +72,7 @@
             const response = await fetch('/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: query, chats: chats}),
+                body: JSON.stringify({ question: query, chats: chats, admin: true}),
             });
 
             if (!response.ok) {

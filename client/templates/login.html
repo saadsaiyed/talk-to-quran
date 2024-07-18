@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %} Login {% endblock %}
+{% block content %}
+<div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+    <div class="flex min-h-full flex-col justify-center px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Log in to your account</h2>
+        </div>
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <!-- <form class="space-y-6" onsubmit="return formValidation(event)" method="POST"> -->
+            <form class="space-y-6" method="POST">
+                <div>
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email / Username</label>
+                    <div class="mt-2">
+                        <input id="email" name="email" type="text" autocomplete="email" required
+                            class="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label for="password"
+                            class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                        <div class="text-sm">
+                            <a href="/login/forget" class="font-semibold text-indigo-600 hover:text-indigo-500" tabindex="-1">Forgot Password?</a>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <input id="password" name="password" type="password" autocomplete="current-password"
+                            required
+                            class="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Log in</button>
+                </div>
+            </form>
+
+            <p class="mt-10 text-center text-sm text-gray-500">
+                Not a member?
+                <a href="/signup" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Register for free</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    function formValidation(event) {
+        clearInstructions();
+        console.log("Input validation");
+        const username = document.getElementById('username');
+        const api_key = document.getElementById('api_key');
+        const local_path = document.getElementById('local_path');
+        const google_client_id = document.getElementById('google_client_id');
+
+        let validation = true;
+
+        const username_regex = /^[a-zA-Z0-9_ ]+$/;
+        const api_key_regex = /^[a-zA-Z0-9-]+$/;
+        const localPath_regex = /^[a-zA-Z0-9_\.\\/]+$/;
+        const google_regex = /^[a-zA-Z0-9\-_.]+$/;
+
+        if (!username.value.match(username_regex) || username.value.length <= 2) {
+            handleInputError(username, "String must only contain letters, numbers and underscores. Length must be more than 2 characters");
+            validation = false;
+        }
+        if (!api_key.value.match(api_key_regex) || api_key.value.length <= 50) {
+            handleInputError(api_key, "String must be a valid OpenAI authentication API key. Length must be more than 50 characters");
+            validation = false;
+        }
+        if (!local_path.value.match(localPath_regex) || local_path.value.length <= 2) {
+            handleInputError(local_path, "String must be a valid local path. Length must be more than 2 characters");
+            validation = false;
+        }
+        if (!google_client_id.value.match(google_regex) || google_client_id.value.length <= 71) {
+            handleInputError(google_client_id, "String must be a valid google client id. Length must be more than 71 characters");
+            validation = false;
+        }
+        if (!validation) {
+            console.log("Error: Invalid input");
+            event.preventDefault(); // Prevent the default form submission behavior
+            return false;
+        }
+
+        return true;
+    }
+
+    function handleInputError(input_element, error_text) {
+        input_element.classList.add('border-2', 'border-rose-500');
+        input_element.parentElement.querySelector('.error').innerHTML = error_text;
+    }
+
+    function clearInstructions() {
+        const errors = document.querySelectorAll('.error');
+        errors.forEach(e => e.innerHTML = "");
+
+        const inputs = document.querySelectorAll('input');
+        console.log(inputs.length);
+        inputs.forEach(input => input.classList.remove('border-2', 'border-rose-500'))
+    }
+
+</script> {% endblock %}

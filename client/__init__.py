@@ -1,11 +1,10 @@
 from flask_cors import CORS
 import json, os, logging, re, shutil
 from flask import Flask, Blueprint, render_template, request, abort, session, jsonify, redirect, url_for
-from functools import wraps
-from datetime import datetime, timezone
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-from werkzeug.security import generate_password_hash, check_password_hash
+
+from . import agent
 
 EMBEDDING_MODEL = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 # import embeddings
@@ -22,6 +21,13 @@ def create_app():
         if request.method == 'POST': 
             question = request.json.get('question')
             chats = request.json.get('chats')
+            admin = request.json.get('admin')
+
+            if admin:
+                custom_agent = agent.Agent()
+                data = custom_agent.invoke(query=question)
+
+                return jsonify({"ai_response": data}), 200
 
             vector_store = Chroma(collection_name="quran-docs", persist_directory="./docs", embedding_function=EMBEDDING_MODEL)
 
@@ -44,3 +50,4 @@ def create_app():
         return render_template('404.html'), 404
 
     return app
+

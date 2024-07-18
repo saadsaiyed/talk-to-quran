@@ -5,9 +5,7 @@ import logging, os, json, chromadb
 # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 # logging.basicConfig(filename='./.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
 EMBEDDING_MODEL = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-
 
 def create_embeddings(all_verses):
 
@@ -62,7 +60,6 @@ def first_approach():
     
     create_embeddings(all_verses)
 
-
 def printAllDataInChromaDB():
     """
     Print available metadata in chromadb.
@@ -86,7 +83,5 @@ def printAllDataInChromaDB():
 
 if os.path.exists("./docs/all_verses.json"):
     with open("./docs/all_verses.json", 'r', encoding='utf-8') as json_file:
-        data = json.load(json_file)
-
-        
+        data = json.load(json_file)        
         create_embeddings(data)
