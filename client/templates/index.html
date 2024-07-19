@@ -44,9 +44,6 @@
         document.getElementById("question").focus();
     }
     let chats = [{"sender": "ai", "message": "What is your name?"}]
-    {% if conversation %}{% for chat in conversation %}
-    chats.push({"sender": "{{ chat.sender }}", "message": "{{ chat.message }}"})
-    {% endfor %}{% endif %}
 
     
     async function askQuestion(event) {

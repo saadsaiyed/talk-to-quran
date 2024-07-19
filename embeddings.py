@@ -77,7 +77,6 @@ def printAllDataInChromaDB():
             for i in range(len(entries['ids'])):
                 print(f"i = {i}, ids = {entries['ids'][i]}, documents = {entries['documents'][i]}, metadatas = {entries['metadatas'][i]}")
 
-# first_approach()
 
 # printAllDataInChromaDB()
 
@@ -85,3 +84,5 @@ if os.path.exists("./docs/all_verses.json"):
     with open("./docs/all_verses.json", 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)        
         create_embeddings(data)
+else:
+    first_approach()
