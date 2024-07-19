@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %} Personal {% endblock %}
+{% block content %}
+<div class="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
+    <div class="pb-12">
+        <h2 class="text-base font-semibold leading-7 text-gray-900">Lets learn from Quran!</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">Express your feelings or if you have specific question, state that.</p>
+        <p class="text-sm leading-6 text-gray-400">&#9432 FYI for now we don't have local conversation memory.</p>
+    </div>
+    <div class="bg-transparent w-full p-8 rounded-lg shadow-lg">
+        <div id="chatDisplay" class="gap-x-10">
+        {% if conversation %}
+            {% for chat in conversation %}
+                {% if chat.sender == 'human' %}
+                    <div class="flex justify-end mb-2 mx-6">
+                        <div class="bg-indigo-500 text-white p-3 rounded-md max-w-prose">
+                            {{ chat.message }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="flex mb-2">
+                        <div class="p-3 rounded-md max-w-prose">
+                            {{ chat.message }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        </div>
+
+        <form onsubmit="askQuestion(event)" class="flex items-center">
+            <input type="hidden" id="token" value="0"/>
+            <input class="mr-5 w-5 h-5" type="checkbox" id="admin"/>
+            <input type="text" id="question" class="flex-1 p-3 border rounded-l-md focus:outline-none focus:border-indigo-500" placeholder="Type your question..."/>
+            <button type="submit" id="submit_button" class="bg-indigo-500 border border-indigo-500 text-white px-6 py-3 rounded-r-md hover:bg-indigo-600 hover:border-indigo-600">Ask</button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    window.onload = () => {
+        document.getElementById("question").focus();
+    }
+    let chats = [{"sender": "ai", "message": "What is your name?"}]
+
+    
+    async function askQuestion(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+        
+        const admin = document.getElementById("admin");
+        const question = document.getElementById("question");
+        const query = question.value
+        document.getElementById("submit_button").classList.remove('border-2', 'border-rose-500', 'bg-rose-500', 'text-gray-500');
+        document.getElementById("submit_button").classList.add('hover:bg-indigo-600', 'hover:border-indigo-600');
+        question.classList.add("focus:border-indigo-500")
+        question.classList.remove("focus:border-rose-500")
+        if(query == ""){
+            // Handle incorrect inputs
+            document.getElementById("submit_button").classList.add('border-2', 'border-rose-500', 'bg-rose-500', 'text-gray-500');
+            document.getElementById("submit_button").classList.remove('hover:bg-indigo-600', 'hover:border-indigo-600');
+            question.classList.remove("focus:border-indigo-500")
+            question.classList.add("focus:border-rose-500")
+            question.focus()
+            return
+        }
+        // Display user's question in the chat
+        displayChatMessage(query, 'user');
+
+        try {
+            const response = await fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: query, chats: chats, admin: admin.checked}),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            var answer = data.ai_response;
+
+            chats.push({"sender": "human", "message": query})
+            chats.push({"sender": "ai", "message": answer})
+
+            
+            question.classList.remove("focus:border-rose-500")
+            question.classList.add("focus:border-indigo-500")
+            question.focus()
+                        
+            displayChatMessage(answer, 'assistant');
+        }
+        catch (error) {
+            displayChatMessage(error, 'assistant');
+            console.error('Error:', error);
+        }
+    }
+
+    function displayChatMessage(message, sender) {
+        var chatDisplay = document.getElementById("chatDisplay");
+        var messageDiv = document.createElement("div");
+
+        // Apply different styles for user and assistant messages
+        if (sender === 'user') {
+            messageDiv.className = "flex justify-end mb-2 mx-6";
+            messageDiv.innerHTML = `<div class="bg-indigo-500 text-white p-3 rounded-md max-w-md">${message}</div>`;
+        }
+        else {
+            messageDiv.className = "flex mb-2";
+            messageDiv.innerHTML = `<div class="p-3 rounded-md max-w-md">${message}</div>`;
+        }
+
+        chatDisplay.appendChild(messageDiv);
+
+        // Clear the input field after sending a message
+        document.getElementById("question").value = '';
+
+        // Scroll to the bottom to always show the latest message
+        chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    }
+
+</script>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %} Sign Up {% endblock %}
+{% block content %}
+<div class="mx-auto max-w-xl py-32 sm:py-48 lg:py-56">
+    <div class="flex min-h-full flex-col justify-center px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign Up for Free</h2>
+        </div>
+        <div class="mt-10">
+            <form class="space-y-6" onsubmit="return formValidation(event)" method="POST">
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
+                    <div class="sm:col-span-2">
+                        <label for="display_name" class="block text-sm font-medium leading-6 text-gray-900">Display Name</label>
+                        <div class="mt-2">
+                            <input type="text" name="display_name" id="display_name" autocomplete="given-name"
+                                class="block w-full rounded-md border-0 px-2 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
+                            <span class="error text-sm text-rose-500"></span>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+                        <div class="mt-2">
+                            <input type="text" name="username" id="username" autocomplete="given-name"
+                                class="block w-full rounded-md border-0 px-2 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
+                            <span class="error text-sm text-rose-500"></span>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-4">
+                        <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                        <div class="mt-2">
+                            <input type="email" name="email" id="email"
+                                class="block w-full rounded-md border-0 px-2 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
+                            <span class="error text-sm text-rose-500"></span>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                        <div class="mt-2">
+                            <input type="password" name="password" id="password"
+                                class="block w-full rounded-md border-0 px-2 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
+                            <span class="error text-sm text-rose-500"></span>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="c_password" class="block text-sm font-medium leading-6 text-gray-900">Confirm Password</label>
+                        <div class="mt-2">
+                            <input type="password" name="c_password" id="c_password"
+                                class="block w-full rounded-md border-0 px-2 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
+                            <span class="error text-sm text-rose-500"></span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit"
+                        class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign Up</button>
+                </div>
+            </form>
+
+            <p class="mt-10 text-center text-sm text-gray-500">
+                Already a member?
+                <a href="/login" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Login to your Account</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    function formValidation(event) {
+        clearInstructions();
+        const display_name = document.getElementById('display_name');
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const c_password = document.getElementById('c_password');
+        
+        let validation = true;
+
+        const username_regex = /^[a-zA-Z0-9_ ]+$/;
+
+        if (display_name.value.length <= 3) {
+            handleInputError(display_name, "String must be at least 4 characters long");
+            validation = false;
+        }
+        if (!username.value.match(username_regex) || username.value.length <= 2) {
+            handleInputError(username, "String must only contain letters, numbers and underscores. Length must be more than 2 characters");
+            validation = false;
+        }
+        if (password.value.length < 8) {
+            handleInputError(password, "Password must have 8 or more characters");
+            validation = false;
+        }
+        if (password.value != c_password.value) {
+            handleInputError(c_password, "Password is not matching");
+            validation = false;
+        }
+        if (!validation) {
+            console.log("Error: Invalid input");
+            event.preventDefault(); // Prevent the default form submission behavior
+            return false;
+        }
+
+        return true;
+    }
+
+    function handleInputError(input_element, error_text) {
+        input_element.classList.add('border-2', 'border-rose-500');
+        input_element.parentElement.querySelector('.error').innerHTML = error_text;
+    }
+
+    function clearInstructions() {
+        const errors = document.querySelectorAll('.error');
+        errors.forEach(e => e.innerHTML = "");
+
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => input.classList.remove('border-2', 'border-rose-500'))
+    }
+
+</script> {% endblock %}
