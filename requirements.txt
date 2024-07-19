@@ -6,3 +6,5 @@ langchain-community==0.2.7
 langchain-huggingface==0.0.3
 chromadb==0.5.4
 sentence-transformers
+langgraph
+langchain_openai

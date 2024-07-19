@@ -9,7 +9,7 @@ class Agent():
         logging.debug(f"INITIALIZATION STARTED")
         
         model = ChatOpenAI(model="gpt-4o")
-        tools = [self.fectch_verse]
+        tools = [self.fetch_verse]
         system_message = SystemMessage(content=f"""You are an Expert at Quranic Texts and Books of Hadith. Based on User's input, understand their emotions and provide a Chapter No. and Verse Number that is related and find the translation from the agent. "verse_key" example "3:14" indicating chapter 3 verse 14.""")
         self.app = create_react_agent(model, tools, messages_modifier=system_message, debug=True)
     
@@ -24,7 +24,7 @@ class Agent():
         )["messages"][-1].content.strip()
 
     @tool
-    def fectch_verse(verse_key: str) -> str:
+    def fetch_verse(verse_key: str) -> str:
         """Provides verse translation based on user verse_key example: 6:16"""
         logging.debug("Assisting")
 
