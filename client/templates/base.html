@@ -31,16 +31,6 @@
                         </svg>
                     </button>
                 </div>
-                <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-                    <div class="hidden lg:flex lg:gap-x-3">
-                        {% if session.get('username') %}
-                            <a href="/profile" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">{{session['username']}}</a>
-                            <a href="/logout" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log out</a>
-                        {% else %}
-                            <a href="/login" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log In / Sign Up</a>
-                        {% endif %}
-                    </div> 
-                </div>
             </nav>
             <!-- Mobile menu, show/hide based on menu open state. -->
             <div class="lg:hidden" role="dialog" aria-modal="true">
