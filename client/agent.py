@@ -36,4 +36,4 @@ class Agent():
                         return verse["translation"]
 
         return "No response"
-
+    
