@@ -30,7 +30,13 @@
 
         <form onsubmit="askQuestion(event)" class="flex items-center">
             <input type="hidden" id="token" value="0"/>
-            <input class="mr-5 w-5 h-5" type="checkbox" id="admin"/>
+            <!-- Checkbox for the boolean input -->
+            <span class="flex items-center space-x-2 mr-4">
+                <label>Sementic Search</label>
+                <input id="1" name="selected_participant" type="radio" value="1" onclick="event.stopPropagation()" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+                <label>AI Search</label>
+                <input id="2" name="selected_participant" type="radio" value="2" onclick="event.stopPropagation()" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+            </span>
             <input type="text" id="question" class="flex-1 p-3 border rounded-l-md focus:outline-none focus:border-indigo-500" placeholder="Type your question..."/>
             <button type="submit" id="submit_button" class="bg-indigo-500 border border-indigo-500 text-white px-6 py-3 rounded-r-md hover:bg-indigo-600 hover:border-indigo-600">Ask</button>
         </form>
@@ -50,7 +56,7 @@
         // Prevent the default form submission behavior
         event.preventDefault();
         
-        const admin = document.getElementById("admin");
+        const admin = document.getElementById('2')
         const question = document.getElementById("question");
         const query = question.value
         document.getElementById("submit_button").classList.remove('border-2', 'border-rose-500', 'bg-rose-500', 'text-gray-500');
