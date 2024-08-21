@@ -8,3 +8,6 @@ chromadb==0.5.4
 sentence-transformers
 langgraph
 langchain_openai
+langchain-mongodb
+langchain-openai
+pymongo
