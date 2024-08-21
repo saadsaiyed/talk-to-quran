@@ -7,10 +7,12 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from . import agent
 
 EMBEDDING_MODEL = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-# import embeddings
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.basicConfig(filename='./.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+if not os.path.exists("./docs/all_verses.json"):
+    import embeddings
 
 def create_app():
     app = Flask(__name__)
@@ -25,7 +27,12 @@ def create_app():
 
             if admin:
                 custom_agent = agent.Agent()
-                data = custom_agent.invoke(query=question)
+                chat_history = []
+                if chats:
+                    for chat in chats:
+                        chat_history.append((chat["sender"], chat["message"]))
+
+                data = custom_agent.invoke(query=question, chat_history=chat_history)
 
                 return jsonify({"ai_response": data}), 200
 
