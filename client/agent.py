@@ -10,14 +10,14 @@ class Agent():
         
         model = ChatOpenAI(model="gpt-4o")
         tools = [self.fetch_verse]
-        system_message = SystemMessage(content=f"""You are an Expert at Quranic Texts and Books of Hadith. Based on User's input, understand their emotions and provide a Chapter No. and Verse Number that is related and find the translation from the agent. "verse_key" example "3:14" indicating chapter 3 verse 14.""")
+        system_message = SystemMessage(content=f"""You are an Expert at Quranic Texts and Books of Hadith. Based on User's input, understand their emotions and provide a Chapter No. and Verse Number that is related and find the translation from the agent. "verse_key" example "3:14" indicating chapter 3 verse 14. Respond like an Imam.""")
         self.app = create_react_agent(model, tools, messages_modifier=system_message, debug=True)
     
-    def invoke(self, query):
+    def invoke(self, query, chat_history):
         """Returns app to invoke and create chain"""
         return self.app.invoke(
             {
-                "messages": [
+                "messages": chat_history + [
                     ("human", query)
                 ]
             },

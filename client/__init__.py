@@ -27,7 +27,12 @@ def create_app():
 
             if admin:
                 custom_agent = agent.Agent()
-                data = custom_agent.invoke(query=question)
+                chat_history = []
+                if chats:
+                    for chat in chats:
+                        chat_history.append((chat["sender"], chat["message"]))
+
+                data = custom_agent.invoke(query=question, chat_history=chat_history)
 
                 return jsonify({"ai_response": data}), 200
 
