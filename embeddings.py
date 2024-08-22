@@ -39,7 +39,7 @@ except ConnectionFailure as e:
 
 def similarity_search(query, k=3):
     logging.debug(f"Query: {query}")
-    result = vector_store.similarity_search_with_score(query=query, k=k)
+    result = vector_store.similarity_search(query, k=k)
     logging.debug(f"result: {result}")
     return result
 
