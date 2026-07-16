@@ -1,7 +1,13 @@
 __pycache__/
 *.pyc
+*.pyo
+*.log
+*.db
+*.sqlite3
+*.env
 .venv/
 .git/
 .DS_Store
-
-.docs/
+node_modules/
+*.tar.gz
+*.zip

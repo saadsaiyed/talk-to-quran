@@ -1,5 +1,5 @@
 from langchain_huggingface import HuggingFaceEmbeddings
-import logging, os, json
+import logging, os, json, certifi
 import os, pymongo, pprint
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.output_parsers import StrOutputParser
@@ -14,14 +14,13 @@ from pymongo.errors import ConnectionFailure
 from dotenv import load_dotenv
 load_dotenv()
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-logging.basicConfig(filename='./.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+# logging.basicConfig(filename='./.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 EMBEDDING_MODEL = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 try:
-    client = MongoClient(os.environ.get("DB_CONNECTION_STRING"))
-    client.admin.command('ping')
+    client = MongoClient(os.environ.get("DB_CONNECTION_STRING"), tlsCAFile=certifi.where())
     logging.debug("Connected to MongoDB Atlas successfully")
     
     db = client.get_database("master")
